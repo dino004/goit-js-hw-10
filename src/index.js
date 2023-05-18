@@ -18,10 +18,9 @@ function onInput(evt) {
   if (!coutryInput) {
     list.innerHTML = '';
   }
-  console.log(coutryInput);
 
   fetchCountries(coutryInput.trim())
-    .then(data => (list.innerHTML = creatMarkup(data)))
+    .then(data => creatMarkup(data))
     .catch(err => console.log(err));
 }
 
@@ -30,7 +29,7 @@ function fetchCountries(country) {
 
   return fetch(`${BASE_URL}/name/${country}`).then(resp => {
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      throw new Error(Notiflix.Notify.failure('Oops, there is no country with that name'));
     }
 
     return resp.json();
@@ -42,7 +41,7 @@ function creatMarkup(arr) {
       'Too many matches found. Please enter a more specific name.'
     );
   } else if (arr.length >= 2) {
-    return arr
+    return (list.innerHTML = arr
       .map(
         ({
           name: { official },
@@ -52,9 +51,9 @@ function creatMarkup(arr) {
 <p> ${official}</p>
 </li>`
       )
-      .join('');
+      .join(''));
   } else {
-    return arr
+    return (list.innerHTML = arr
       .map(
         ({
           name: { official },
@@ -66,9 +65,9 @@ function creatMarkup(arr) {
 <h2 style="display:flex;align-items:center;"><img width="50px" src="${svg}" alt="${alt}" style="margin-right:10px;"> ${official}</h2>
 <h3>Capital: ${capital}</h3>
 <p>Population: ${population}</p>
-<p>Languages: ${languages}</p>
+<p>Languages: ${Object.values(languages)}</p>
 </li>`
       )
-      .join('');
+      .join(''));
   }
 }
