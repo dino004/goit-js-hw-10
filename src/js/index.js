@@ -1,5 +1,5 @@
-import './css/styles.css';
 import Notiflix from 'notiflix';
+import { fetchCountries } from "./fetchCountries.js";
 
 var debounce = require('lodash.debounce');
 
@@ -24,17 +24,7 @@ function onInput(evt) {
     .catch(err => console.log(err));
 }
 
-function fetchCountries(country) {
-  const BASE_URL = 'https://restcountries.com/v3.1';
 
-  return fetch(`${BASE_URL}/name/${country}`).then(resp => {
-    if (!resp.ok) {
-      throw new Error(Notiflix.Notify.failure('Oops, there is no country with that name'));
-    }
-
-    return resp.json();
-  });
-}
 function creatMarkup(arr) {
   if (arr.length >= 10) {
     Notiflix.Notify.info(
