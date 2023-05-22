@@ -1,5 +1,5 @@
 import Notiflix from 'notiflix';
-import { fetchCountries } from "./fetchCountries.js";
+import { fetchCountries } from './fetchCountries.js';
 
 var debounce = require('lodash.debounce');
 
@@ -16,19 +16,32 @@ function onInput(evt) {
   countryInput = evt.target.value.trim();
 
   if (!countryInput) {
-    list.innerHTML = '';
-    countryInfo.innerHTML = '';
+    clearMarkup();
     return;
   }
 
   fetchCountries(countryInput)
-    .then(data => createMarkup(data))
-    .catch(err => console.log(err));
+    .then(data => {
+      if (data.length === 0) {
+        Notiflix.Notify.failure('Oops, there is no country with that name');
+        clearMarkup();
+      } else {
+        createMarkup(data);
+      }
+    })
+    .catch(err => {
+      Notiflix.Notify.failure(err.message);
+      clearMarkup();
+    });
+}
+
+function clearMarkup() {
+  list.innerHTML = '';
+  countryInfo.innerHTML = '';
 }
 
 function createMarkup(arr) {
-  list.innerHTML = '';
-  countryInfo.innerHTML = '';
+  clearMarkup();
 
   if (arr.length >= 10) {
     Notiflix.Notify.info(
